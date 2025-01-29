@@ -3,76 +3,54 @@ import Keys from "./Keys";
 
 const Calculator = () => {
   const keys = [
-    "AC",
-    "C",
-    "%",
-    "/",
-    "7",
-    "8",
-    "9",
-    "*",
-    "4",
-    "5",
-    "6",
-    "-",
-    "1",
-    "2",
-    "3",
-    "+",
-    ".",
-    "0",
-    "=",
+    "AC", "C", "%", "/",
+    "7",  "8", "9", "*",
+    "4",  "5", "6", "-",
+    "1",  "2", "3", "+",
+    ".",  "0",   "=",
   ];
 
-  const [showResult, setShowResult] = useState(false);
   const [display, setDisplay] = useState("");
 
   const maxLimit = 15;
 
-  // Helper function to preprocess the display for handling '%'
-  function preprocessDisplay(input) {
-    return input.replace(/(\d+)%/g, "($1/100)");
+  const preprocessDisplay = (input) => input.replace(/(\d+)%/g, "($1/100)")
+
+  function handleButton(value) {
+    if (value === "AC")
+      setDisplay("");
+    else if (value === "C")
+      setDisplay(display.slice(0, -1))
+    else if (isOperator(value)) {
+      if (display == "" || isOperator(display[display.length - 1]))
+         return
+      setDisplay(display + value)
+    }
+    else if (value === "=")
+      calculateResult()
+    else if (display.length >= maxLimit)
+      alert(`maximum characters allowed : ${maxLimit}`);
+    else
+      setDisplay(display + value)
   }
 
   function calculateResult() {
-    if (display.length !== 0) {
-        try {
-            const processedDisplay = preprocessDisplay(display);
-            let calcResult = eval(processedDisplay); // Safe here since input is controlled
-            calcResult = parseFloat(calcResult.toFixed(3));
-            setDisplay(calcResult.toString());
-            // let calcResult = eval(display);
-            // calcResult = parseFloat(calcResult.toFixed(3));
-            // setDisplay(calcResult);
-            setShowResult(true);
-        } catch (error) {
-            setDisplay("Error");
-        }
-    } else setDisplay("");
+    if (display !== "") {
+      try {
+        const processedDisplay = preprocessDisplay(display)
+        let result = eval(processedDisplay)
+        result = "" + result
+        setDisplay(result)
+      }
+      catch (error) {
+        setDisplay("Error")
+      }
+    }
+    else
+      setDisplay("")
   }
 
-  function handleButton(value) {
-    setShowResult(false);
-    if (value === "AC")
-        setDisplay("");
-    else if (value === "C")
-        setDisplay(display.slice(0, -1));
-    else if (isOperator(value)) {
-      if (display == "" || isOperator(display[display.length - 1])) 
-        return;
-      setDisplay(display + value);
-    } else if (value === "=") 
-        calculateResult();
-    else if (display.length >= maxLimit)
-        alert(`maximum characters allowed : ${maxLimit}`);
-    else 
-        setDisplay(display + value);
-  }
-
-  function isOperator(char) {
-    // return ["*", "/", "%"].includes(char);
-    return ["*", "/", "+", "-", "%"].includes(char);
-  }
+  const isOperator = (char) => char == "*" || char == "/" ||  char == "+" || char == "-" || char == "%"
 
   const operationClass =
     "text-[1.2rem] tracking-[2px] flex gap-[5px] items-center text-[rgba(255,255,255,0.5)] justify-end";
