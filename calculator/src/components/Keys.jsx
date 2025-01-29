@@ -2,10 +2,10 @@ import React from "react";
 
 const Keys = ({ label, keyClass, onButtonClick }) => {
   const equalClass =
-    "col-[span_2] bg-[#4ccdc6] text-[#1a261a] font-semibold hover:bg-[#4CCDC6]";
+    "col-[span_2] !bg-yellow-600 font-semibold hover:!bg-yellow-700";
   return (
     <div
-      className={`bg-[#141414] flex cursor-pointer items-center justify-center p-4 rounded-[5px] hover:bg-[#4ccdc742] ${
+      className={`bg-sky-900 flex cursor-pointer items-center justify-center p-4 rounded-[5px] hover:bg-sky-950 ${
         keyClass && equalClass
       }`}
       onClick={() => onButtonClick(label)}
